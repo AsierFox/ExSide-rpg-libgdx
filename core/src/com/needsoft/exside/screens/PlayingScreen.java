@@ -34,8 +34,8 @@ public class PlayingScreen extends ScreenAdapter {
 		shapeRenderer = new ShapeRenderer();
 		
 		player = new Player();
-		
 		player.init(100, 200, this);
+		Gdx.input.setInputProcessor(player);
 		
 		// Don't need to specify width/height, resize() is called just after show()
 		camera = new OrthographicCamera();
@@ -46,13 +46,18 @@ public class PlayingScreen extends ScreenAdapter {
 		Gdx.gl.glClearColor(0, 0, 0, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		
+		camera.position.set(player.getX() + player.getWidth() / 2, player.getY() + player.getHeight() / 2, 0);
+		camera.update();
 		mapRenderer.setView(camera);
-		mapRenderer.render();
 		
 		mapRenderer.getBatch().begin();
 		
+		mapRenderer.renderTileLayer((TiledMapTileLayer) map.getLayers().get("background"));
+		
 		player.update(delta);	
 		player.render(mapRenderer.getBatch());
+		
+		mapRenderer.renderTileLayer((TiledMapTileLayer) map.getLayers().get("foreground"));
 		
 		mapRenderer.getBatch().end();
 		
@@ -66,9 +71,9 @@ public class PlayingScreen extends ScreenAdapter {
 	
 	@Override
 	public void resize(int width, int height) {
-		camera.viewportWidth = width;
-		camera.viewportHeight = height;
-		camera.update();
+		// Reduce viewport
+		camera.viewportWidth = width >> 1;
+		camera.viewportHeight = height >> 1;
 		shapeRenderer.setProjectionMatrix(camera.projection);
 	}
 	
