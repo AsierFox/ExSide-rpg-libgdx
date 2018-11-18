@@ -17,6 +17,8 @@ public abstract class Entity extends Sprite implements Renderable {
 	protected float gravity;
 	protected float speed;
 	
+	protected boolean canJump;
+	
 	protected PlayingScreen belongsToLevel;
 	
 	
@@ -40,8 +42,10 @@ public abstract class Entity extends Sprite implements Renderable {
 		
 		isVisible = true;
 		
-		gravity = 60.0f * 1.8f;
-		speed = 80.0f;
+		gravity = 60 * 1.8f;
+		speed = 60 * 2;
+		
+		canJump = false;
 	}
 	
 	// TODO Move to the map class
