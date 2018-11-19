@@ -52,8 +52,8 @@ public abstract class Entity extends Sprite implements Renderable {
 	protected boolean isTileSolid(final float x, final float y) {
 		final Cell cell = belongsToLevel.collisionLayer.getCell((int) (x / belongsToLevel.collisionLayer.getTileWidth()),
 				(int) (y / belongsToLevel.collisionLayer.getTileHeight()));
-		return cell != null && cell.getTile() != null && cell.getTile().getProperties().get("isSolid") != null
-				&& ((Boolean) (cell.getTile().getProperties().get("isSolid"))).booleanValue();
+		return cell != null && cell.getTile() != null && cell.getTile().getProperties().containsKey("isSolid")
+				&& cell.getTile().getProperties().get("isSolid", Boolean.class).booleanValue();
 	}
 
 	protected boolean isRightCollision() {

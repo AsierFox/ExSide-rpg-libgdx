@@ -17,7 +17,7 @@ public class Player extends Entity implements InputProcessor {
 	public void update(float delta) {
 		applyGravity(delta);
 		
-		System.out.println(vel);
+		System.out.println("Velocity: " + vel);
 		
 		float oldX = getX();
 		float oldY = getY();
@@ -132,7 +132,6 @@ public class Player extends Entity implements InputProcessor {
 
 	@Override
 	public boolean mouseMoved(int screenX, int screenY) {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
