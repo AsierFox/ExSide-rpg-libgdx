@@ -40,6 +40,8 @@ public abstract class Entity extends Sprite implements Renderable {
 		setX(x);
 		setY(y);
 		
+		// TODO Set anchor point to the center
+		
 		isVisible = true;
 		
 		gravity = 60 * 1.8f;
