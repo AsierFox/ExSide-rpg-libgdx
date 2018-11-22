@@ -1,12 +1,11 @@
 package com.needsoft.exside.screens;
 
-import java.util.Iterator;
-
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.maps.MapObject;
@@ -16,19 +15,15 @@ import com.badlogic.gdx.maps.objects.PolygonMapObject;
 import com.badlogic.gdx.maps.objects.PolylineMapObject;
 import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
-import com.badlogic.gdx.maps.tiled.TiledMapTile;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
-import com.badlogic.gdx.maps.tiled.TiledMapTileLayer.Cell;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.maps.tiled.tiles.AnimatedTiledMapTile;
-import com.badlogic.gdx.maps.tiled.tiles.StaticTiledMapTile;
 import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Ellipse;
 import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Polyline;
 import com.badlogic.gdx.math.Rectangle;
-import com.badlogic.gdx.utils.Array;
 import com.needsoft.exside.entities.Player;
 
 public class PlayingScreen extends ScreenAdapter {
@@ -45,12 +40,17 @@ public class PlayingScreen extends ScreenAdapter {
 	
 	private Player player;
 	
+	private ShaderProgram shader;
+	
 	
 	@Override
 	public void show() {
 		// TODO Refactor to map class
-		map = new TmxMapLoader().load("maps/test-map.tmx");
+		map = new TmxMapLoader().load("maps/shader-map.tmx");
 		collisionLayer = (TiledMapTileLayer) map.getLayers().get(0);
+		
+		/*
+		// Set animations to map
 		Array<StaticTiledMapTile> frameTiles = new Array<StaticTiledMapTile>(2);
 		// Find animation tile in the tileset
 		final Iterator<TiledMapTile> tileIterator = map.getTileSets().getTileSet(0).iterator();
@@ -74,6 +74,7 @@ public class PlayingScreen extends ScreenAdapter {
 				}
 			}
 		}
+		*/
 		
 		mapRenderer = new OrthogonalTiledMapRenderer(map);
 		shapeRenderer = new ShapeRenderer();
@@ -84,6 +85,12 @@ public class PlayingScreen extends ScreenAdapter {
 		
 		// Don't need to specify width/height, resize() is called just after show()
 		camera = new OrthographicCamera();
+		
+		// We don't need to have all attributes due to shaders are simple
+		ShaderProgram.pedantic = false;
+		shader = new ShaderProgram(Gdx.files.internal("shaders/none.vsh"), Gdx.files.internal("shaders/none.fsh"));
+		System.out.println(shader.isCompiled() + " Errors => [" + shader.getLog() + "]");
+		mapRenderer.getBatch().setShader(shader);
 	}
 	
 	@Override
@@ -95,6 +102,12 @@ public class PlayingScreen extends ScreenAdapter {
 		camera.update();
 		mapRenderer.setView(camera);
 		
+		player.update(delta);
+		
+//		shader.begin();
+//		shader.setUniformf("u_distort", MathUtils.random(4), MathUtils.random(4), 0);
+//		shader.end();
+		
 		// Background layer index
 		mapRenderer.render(new int[] { 0 });
 
@@ -102,18 +115,23 @@ public class PlayingScreen extends ScreenAdapter {
 		
 		mapRenderer.renderTileLayer((TiledMapTileLayer) map.getLayers().get("background"));
 		
-		player.update(delta);	
 		player.render(mapRenderer.getBatch());
 		
-		mapRenderer.renderTileLayer((TiledMapTileLayer) map.getLayers().get("foreground"));
+		//mapRenderer.renderTileLayer((TiledMapTileLayer) map.getLayers().get("foreground"));
 		
 		mapRenderer.getBatch().end();
 		
 		// Foreground layer index
-		mapRenderer.render(new int[] { 1 });
+		//mapRenderer.render(new int[] { 1 });
 		
 		shapeRenderer.setProjectionMatrix(camera.combined);
+
+		//renderShapes();
 		
+		System.out.println("FPS : " + Gdx.app.getGraphics().getFramesPerSecond());
+	}
+	
+	private void renderShapes() {
 		for (MapObject mapObject : map.getLayers().get("objects").getObjects()) {
 			if (mapObject instanceof RectangleMapObject) {
 				final Rectangle rect = ((RectangleMapObject) mapObject).getRectangle();
@@ -153,8 +171,6 @@ public class PlayingScreen extends ScreenAdapter {
 				shapeRenderer.end();
 			}
 		}
-		
-		System.out.println("FPS : " + Gdx.app.getGraphics().getFramesPerSecond());
 	}
 	
 	@Override

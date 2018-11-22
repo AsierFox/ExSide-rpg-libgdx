@@ -15,9 +15,7 @@ public class Player extends Entity implements InputProcessor {
 	
 	@Override
 	public void update(float delta) {
-		applyGravity(delta);
-		
-		System.out.println("Velocity: " + vel);
+		//applyGravity(delta);
 		
 		float oldX = getX();
 		float oldY = getY();

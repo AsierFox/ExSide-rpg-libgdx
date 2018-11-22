@@ -66,7 +66,7 @@ public class LoadingScreen extends ScreenAdapter {
 	
 	private void update(final float delta) {
 		progress = MathUtils.lerp(progress, assetManager.getProgress(), .1f);
-		
+
 		if (assetManager.update()) {
 			// Assets loaded
 			belongsToGame.setScreen(new PlayingScreen());

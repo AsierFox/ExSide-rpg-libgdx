@@ -7,7 +7,6 @@ import com.needsoft.exside.Game;
 public class DesktopLauncher {
 	public static void main (String[] arg) {
 		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
-		config.useGL30 = true;
 		config.width = Game.WINDOW_WIDTH;
 		config.height = Game.WINDOW_HEIGHT;
 		config.resizable = true;
