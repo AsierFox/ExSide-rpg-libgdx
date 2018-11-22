@@ -1,5 +1,7 @@
 package com.needsoft.exside.screens;
 
+import java.util.Iterator;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.Color;
@@ -15,15 +17,20 @@ import com.badlogic.gdx.maps.objects.PolygonMapObject;
 import com.badlogic.gdx.maps.objects.PolylineMapObject;
 import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
+import com.badlogic.gdx.maps.tiled.TiledMapTile;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
+import com.badlogic.gdx.maps.tiled.TiledMapTileLayer.Cell;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.maps.tiled.tiles.AnimatedTiledMapTile;
+import com.badlogic.gdx.maps.tiled.tiles.StaticTiledMapTile;
 import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Ellipse;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Polyline;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.utils.Array;
 import com.needsoft.exside.entities.Player;
 
 public class PlayingScreen extends ScreenAdapter {
@@ -46,10 +53,9 @@ public class PlayingScreen extends ScreenAdapter {
 	@Override
 	public void show() {
 		// TODO Refactor to map class
-		map = new TmxMapLoader().load("maps/shader-map.tmx");
+		map = new TmxMapLoader().load("maps/test-map.tmx");
 		collisionLayer = (TiledMapTileLayer) map.getLayers().get(0);
 		
-		/*
 		// Set animations to map
 		Array<StaticTiledMapTile> frameTiles = new Array<StaticTiledMapTile>(2);
 		// Find animation tile in the tileset
@@ -74,7 +80,6 @@ public class PlayingScreen extends ScreenAdapter {
 				}
 			}
 		}
-		*/
 		
 		mapRenderer = new OrthogonalTiledMapRenderer(map);
 		shapeRenderer = new ShapeRenderer();
@@ -88,7 +93,7 @@ public class PlayingScreen extends ScreenAdapter {
 		
 		// We don't need to have all attributes due to shaders are simple
 		ShaderProgram.pedantic = false;
-		shader = new ShaderProgram(Gdx.files.internal("shaders/none.vsh"), Gdx.files.internal("shaders/none.fsh"));
+		shader = new ShaderProgram(Gdx.files.internal("shaders/camera-shake.vsh"), Gdx.files.internal("shaders/camera-shake.fsh"));
 		System.out.println(shader.isCompiled() + " Errors => [" + shader.getLog() + "]");
 		mapRenderer.getBatch().setShader(shader);
 	}
@@ -117,16 +122,16 @@ public class PlayingScreen extends ScreenAdapter {
 		
 		player.render(mapRenderer.getBatch());
 		
-		//mapRenderer.renderTileLayer((TiledMapTileLayer) map.getLayers().get("foreground"));
+		mapRenderer.renderTileLayer((TiledMapTileLayer) map.getLayers().get("foreground"));
 		
 		mapRenderer.getBatch().end();
 		
 		// Foreground layer index
-		//mapRenderer.render(new int[] { 1 });
+		mapRenderer.render(new int[] { 1 });
 		
 		shapeRenderer.setProjectionMatrix(camera.combined);
 
-		//renderShapes();
+		renderShapes();
 		
 		System.out.println("FPS : " + Gdx.app.getGraphics().getFramesPerSecond());
 	}
