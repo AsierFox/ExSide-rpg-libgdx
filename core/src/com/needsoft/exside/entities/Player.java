@@ -15,7 +15,7 @@ public class Player extends Entity implements InputProcessor {
 	
 	@Override
 	public void update(float delta) {
-		//applyGravity(delta);
+		applyGravity(delta);
 		
 		float oldX = getX();
 		float oldY = getY();
@@ -54,7 +54,7 @@ public class Player extends Entity implements InputProcessor {
 			vel.y = 0;
 		}
 		
-		System.out.println("Collides X: " + isXCollision + " // Collides Y: " + isYCollision);
+		//System.out.println("Collides X: " + isXCollision + " // Collides Y: " + isYCollision);
 	}
 
 	private void applyGravity(float delta) {

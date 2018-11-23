@@ -4,6 +4,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer.Cell;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.needsoft.exside.interfaces.Renderable;
 import com.needsoft.exside.screens.PlayingScreen;
@@ -13,6 +14,8 @@ public abstract class Entity extends Sprite implements Renderable {
 	public boolean isVisible;
 	
 	public Vector2 vel;
+	
+	public Rectangle collider;
 	
 	protected float gravity;
 	protected float speed;
@@ -36,6 +39,7 @@ public abstract class Entity extends Sprite implements Renderable {
 		belongsToLevel = level;
 		
 		vel = new Vector2();
+		collider = new Rectangle(getX(), getY(), getWidth(), getHeight());
 
 		setX(x);
 		setY(y);

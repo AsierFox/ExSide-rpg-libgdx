@@ -26,12 +26,13 @@ import com.badlogic.gdx.maps.tiled.tiles.AnimatedTiledMapTile;
 import com.badlogic.gdx.maps.tiled.tiles.StaticTiledMapTile;
 import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Ellipse;
-import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Polyline;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import com.needsoft.exside.entities.Player;
+import com.needsoft.exside.systems.camera.CameraManager;
 
 public class PlayingScreen extends ScreenAdapter {
 	
@@ -94,7 +95,7 @@ public class PlayingScreen extends ScreenAdapter {
 		// We don't need to have all attributes due to shaders are simple
 		ShaderProgram.pedantic = false;
 		shader = new ShaderProgram(Gdx.files.internal("shaders/camera-shake.vsh"), Gdx.files.internal("shaders/camera-shake.fsh"));
-		System.out.println(shader.isCompiled() + " Errors => [" + shader.getLog() + "]");
+		System.out.println("Shader compiled: " + shader.isCompiled() + " Errors => [" + shader.getLog() + "]");
 		mapRenderer.getBatch().setShader(shader);
 	}
 	
@@ -103,11 +104,7 @@ public class PlayingScreen extends ScreenAdapter {
 		Gdx.gl.glClearColor(0, 0, 0, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		
-		camera.position.set(player.getX() + player.getWidth() / 2, player.getY() + player.getHeight() / 2, 0);
-		camera.update();
-		mapRenderer.setView(camera);
-		
-		player.update(delta);
+		update(delta);
 		
 //		shader.begin();
 //		shader.setUniformf("u_distort", MathUtils.random(4), MathUtils.random(4), 0);
@@ -133,7 +130,19 @@ public class PlayingScreen extends ScreenAdapter {
 
 		renderShapes();
 		
-		System.out.println("FPS : " + Gdx.app.getGraphics().getFramesPerSecond());
+		//System.out.println("FPS : " + Gdx.app.getGraphics().getFramesPerSecond());
+	}
+	
+	private void update(final float delta) {
+		updateCamera();
+		
+		player.update(delta);
+	}
+
+	private void updateCamera() {
+		CameraManager.lerpToTarget(camera, new Vector2(player.getX(), player.getY()));
+		camera.update();
+		mapRenderer.setView(camera);
 	}
 	
 	private void renderShapes() {
