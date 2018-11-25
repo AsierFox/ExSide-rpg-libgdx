@@ -8,12 +8,9 @@ import com.needsoft.exside.entities.Entity;
 public class CameraManager {
 
 	public static void lockOnEntity(Camera camera, final Entity entity) {
-		Vector3 position = camera.position;
 		// TODO Make a function in Entity to get the center of the Sprite
-		// TODO Then call to lockOnTarge or something, its same method...
-		position.x = entity.getX() + entity.getWidth() / 2;
-		position.y = entity.getY() + entity.getHeight() / 2;
-		camera.position.set(position);
+		lockOnTarget(camera, new Vector2(entity.getX() + entity.getWidth() / 2,
+				entity.getY() + entity.getHeight() / 2));
 	}
 	
 	public static void lockOnTarget(Camera camera, final Vector2 target) {
@@ -30,6 +27,14 @@ public class CameraManager {
 		position.x = target.x + (target.x - camera.position.x) * lerpFactor;
 		position.y = target.y + (target.y - camera.position.y) * lerpFactor  ;
 		camera.position.set(position);
+	}
+	
+	public static void lockAverageBetweenTargets(Camera camera, Vector2 targetA, Vector2 targetB) {
+		lockOnTarget(camera, new Vector2((targetA.x + targetB.x) / 2, (targetA.y + targetB.y) / 2));
+	}
+	
+	public static void lerpAverageBetweenTargets(Camera camera, Vector2 targetA, Vector2 targetB) {
+		lerpToTarget(camera, new Vector2((targetA.x + targetB.x) / 2, (targetA.y + targetB.y) / 2));
 	}
 	
 }
