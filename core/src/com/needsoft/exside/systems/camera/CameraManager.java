@@ -37,4 +37,40 @@ public class CameraManager {
 		lerpToTarget(camera, new Vector2((targetA.x + targetB.x) / 2, (targetA.y + targetB.y) / 2));
 	}
 	
+	/**
+	 * If the position approaches at the raius limit respect the point focus, it focus to this point.
+	 * 
+	 * @param camera
+	 * @param position
+	 * @param pointToFocus
+	 * @param radiusLimit
+	 * @return If has qpproached
+	 */
+	public static boolean focusAtApproached(Camera camera, final Vector2 position, final Vector2 pointToFocus, final float radiusLimit) {
+		if (position.dst(pointToFocus) <= radiusLimit) {
+			lerpToTarget(camera, pointToFocus);
+			return true;
+		}
+		return false;
+	}
+	
+	public static void clampBondaries(Camera camera, final float x, final float y, final float width, final float height) {
+		Vector3 position = camera.position;
+		
+		if (position.x < x) {
+			position.x = x;
+		}
+		else if (position.x > width) {
+			position.x = width;
+		}
+		if (position.y < y) {
+			position.y = y;
+		}
+		else if (position.y > height) {
+			position.y = height;
+		}
+		
+		camera.position.set(position);
+	}
+
 }

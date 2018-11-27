@@ -141,6 +141,14 @@ public class PlayingScreen extends ScreenAdapter {
 
 	private void updateCamera() {
 		CameraManager.lerpToTarget(camera, new Vector2(player.getX(), player.getY()));
+		
+		float mapWidth = ((TiledMapTileLayer) map.getLayers().get(0)).getTileWidth()
+				* ((TiledMapTileLayer) map.getLayers().get(0)).getWidth();
+		float mapHeight = ((TiledMapTileLayer) map.getLayers().get(0)).getTileHeight()
+				* ((TiledMapTileLayer) map.getLayers().get(0)).getHeight();
+		
+		CameraManager.clampBondaries(camera, 0, 0, mapWidth, mapHeight);
+		// Vital to call update after camera's position change
 		camera.update();
 		mapRenderer.setView(camera);
 	}
