@@ -31,7 +31,7 @@ import com.badlogic.gdx.math.Polyline;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
-import com.needsoft.exside.entities.Player;
+import com.needsoft.exside.entities.player.Player;
 import com.needsoft.exside.systems.camera.CameraManager;
 
 public class PlayingScreen extends ScreenAdapter {
@@ -112,7 +112,7 @@ public class PlayingScreen extends ScreenAdapter {
 		
 		// Background layer index
 		mapRenderer.render(new int[] { 0 });
-
+		
 		mapRenderer.getBatch().begin();
 		
 		mapRenderer.renderTileLayer((TiledMapTileLayer) map.getLayers().get("background"));

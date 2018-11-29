@@ -2,7 +2,8 @@ package com.needsoft.exside.types;
 
 public enum EntityState {
     IDLE,
-    MOVING,
+    WALKING,
+    RUNNING,
     FALLING,
     ATTACKING,
     DEFENDING

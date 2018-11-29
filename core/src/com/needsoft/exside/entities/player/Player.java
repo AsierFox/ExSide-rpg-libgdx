@@ -1,4 +1,4 @@
-package com.needsoft.exside.entities;
+package com.needsoft.exside.entities.player;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
@@ -6,17 +6,28 @@ import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.needsoft.exside.entities.Entity;
+import com.needsoft.exside.types.Direction;
+import com.needsoft.exside.types.EntityState;
 
 public class Player extends Entity implements InputProcessor {
+
+	private PlayerAnimationSet animationSet;
+	
 	
 	public Player() {
 		super(new TextureRegion(new Texture(Gdx.files.internal("entities/player/player.png")), 30, 50));
+		
+		animationSet = new PlayerAnimationSet(this);
 	}
 	
 	@Override
 	public void update(float delta) {
-		applyGravity(delta);
+		//applyGravity(delta);
 		
+		// TODO Refactor things to Entity
+		
+		// Check collisions
 		float oldX = getX();
 		float oldY = getY();
 		boolean isXCollision = false;
@@ -35,8 +46,8 @@ public class Player extends Entity implements InputProcessor {
 			setX(oldX);
 			vel.x = 0;
 		}
-
-		setY(getY() + vel.y * delta * 5f);
+		
+		setY(getY() + vel.y * delta);
 		
 		if (vel.y > 0) {
 			isYCollision = isTopCollision();
@@ -53,6 +64,45 @@ public class Player extends Entity implements InputProcessor {
 			setY(oldY);
 			vel.y = 0;
 		}
+		
+		// Update state
+		if (vel.x == 0 && vel.y == 0) {
+			currentState = EntityState.IDLE;
+		}
+		else {
+			currentState = EntityState.WALKING;
+		}
+		
+		// Update animation
+		
+		// If the current state is the same as the previous state increase the state timer.
+        // Otherwise the state has changed and we need to reset timer.
+        animationTimer = currentState == previousState ? animationTimer + delta : 0;
+		
+		if (vel.y > 0) {
+			direction = Direction.NORTH;
+		}
+		else if (vel.y < 0) {
+			direction = Direction.SOUTH;
+		}
+		else if (vel.x > 0) {
+			direction = Direction.EAST;
+		}
+		else if (vel.x < 0) {
+			direction = Direction.WEST;
+		}
+		
+		if (currentState == EntityState.IDLE) {
+			setRegion(animationSet.getIdle(direction).getKeyFrame(animationTimer));
+		}
+		else if (currentState == EntityState.WALKING) {
+			setRegion(animationSet.getWalking(direction).getKeyFrame(animationTimer, true));
+		}
+		
+		System.out.println(currentState);
+		
+		// Update previous state
+		previousState = currentState;
 		
 		//System.out.println("Collides X: " + isXCollision + " // Collides Y: " + isYCollision);
 	}
@@ -82,10 +132,16 @@ public class Player extends Entity implements InputProcessor {
 	public boolean keyDown(int keycode) {
 		switch (keycode) {
 		case Keys.W:
+			vel.y = speed;
+			/*
 			if (canJump) {
 				vel.y = speed;
 				canJump = false;
 			}
+			*/
+			break;
+		case Keys.S:
+			vel.y = -speed;
 			break;
 		case Keys.D:
 			vel.x = speed;
@@ -100,6 +156,10 @@ public class Player extends Entity implements InputProcessor {
 	@Override
 	public boolean keyUp(int keycode) {
 		switch (keycode) {
+		case Keys.W:
+		case Keys.S:
+			vel.y = 0;
+			break;
 		case Keys.D:
 		case Keys.A:
 			vel.x = 0;
@@ -137,5 +197,5 @@ public class Player extends Entity implements InputProcessor {
 	public boolean scrolled(int amount) {
 		return false;
 	}
-	
+
 }
