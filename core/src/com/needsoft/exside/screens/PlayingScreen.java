@@ -33,6 +33,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import com.needsoft.exside.entities.player.Player;
 import com.needsoft.exside.systems.camera.CameraManager;
+import com.needsoft.exside.systems.hud.HUD;
 
 public class PlayingScreen extends ScreenAdapter {
 	
@@ -47,6 +48,8 @@ public class PlayingScreen extends ScreenAdapter {
 	private ShapeRenderer shapeRenderer;
 	
 	private Player player;
+
+	private HUD hud;
 	
 	private ShaderProgram shader;
 	
@@ -83,11 +86,14 @@ public class PlayingScreen extends ScreenAdapter {
 		}
 		
 		mapRenderer = new OrthogonalTiledMapRenderer(map);
+
 		shapeRenderer = new ShapeRenderer();
 		
 		player = new Player();
 		player.init(100, 200, this);
 		Gdx.input.setInputProcessor(player);
+
+		hud = new HUD();
 		
 		// Don't need to specify width/height, resize() is called just after show()
 		camera = new OrthographicCamera();
@@ -116,9 +122,10 @@ public class PlayingScreen extends ScreenAdapter {
 		mapRenderer.getBatch().begin();
 		
 		mapRenderer.renderTileLayer((TiledMapTileLayer) map.getLayers().get("background"));
-		
+
 		player.render(mapRenderer.getBatch());
-		
+		hud.render(mapRenderer.getBatch());
+
 		mapRenderer.renderTileLayer((TiledMapTileLayer) map.getLayers().get("foreground"));
 		
 		mapRenderer.getBatch().end();
@@ -137,6 +144,7 @@ public class PlayingScreen extends ScreenAdapter {
 		updateCamera();
 		
 		player.update(delta);
+		hud.update(delta);
 	}
 
 	private void updateCamera() {
@@ -211,6 +219,7 @@ public class PlayingScreen extends ScreenAdapter {
 	@Override
 	public void dispose() {
 		player.dispose();
+		hud.dispose();
 		mapRenderer.dispose();
 		map.dispose();
 	}

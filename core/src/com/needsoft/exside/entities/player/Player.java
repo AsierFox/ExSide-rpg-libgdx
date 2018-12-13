@@ -99,8 +99,6 @@ public class Player extends Entity implements InputProcessor {
 			setRegion(animationSet.getWalking(direction).getKeyFrame(animationTimer, true));
 		}
 		
-		System.out.println(currentState);
-		
 		// Update previous state
 		previousState = currentState;
 		
