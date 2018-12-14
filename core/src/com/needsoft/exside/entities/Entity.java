@@ -61,7 +61,7 @@ public abstract class Entity extends Sprite implements Renderable {
 		isVisible = true;
 		
 		gravity = 60 * 1.8f;
-		speed = 60 >> 1;
+		speed = 90;
 		
 		animationTimer = 0;
 		

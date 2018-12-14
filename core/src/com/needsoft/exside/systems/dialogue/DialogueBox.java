@@ -1,8 +1,8 @@
 package com.needsoft.exside.systems.dialogue;
 
-import com.badlogic.gdx.utils.Align;
 import com.kotcrab.vis.ui.widget.VisLabel;
 import com.kotcrab.vis.ui.widget.VisTable;
+import com.needsoft.exside.Game;
 
 public class DialogueBox extends VisTable {
 
@@ -28,20 +28,21 @@ public class DialogueBox extends VisTable {
         animationTotalTime = text.length() * TIME_PER_CHARACTER;
         textLabel = new VisLabel();
 
-        setFillParent(true);
+        setFillParent(false);
 
         debug();
 
         add(textLabel);
+        
+        setWidth(Game.WINDOW_WIDTH);
+        setHeight(100);
     }
 
     @Override
     public void act(float delta) {
         super.act(delta);
         
-        System.out.println(delta);
-
-        if (State.ANIMATING == state) {
+        if (state == State.ANIMATING) {
             animationTimer += delta;
 
             if (animationTimer > animationTotalTime) {
@@ -49,14 +50,14 @@ public class DialogueBox extends VisTable {
                 animationTimer = animationTotalTime;
             }
 
-            String displayedText = "";
+            StringBuilder displayedText = new StringBuilder();
             int charactersToDisplay = (int) ((animationTimer / animationTotalTime) * targetText.length());
             for (int i = 0; i < charactersToDisplay; i++) {
-                displayedText += targetText.charAt(i);
+                displayedText.append(targetText.charAt(i));
             }
 
             if (!displayedText.equals(textLabel.getText().toString())) {
-                setText(displayedText);
+                setText(displayedText.toString());
             }
         }
     }

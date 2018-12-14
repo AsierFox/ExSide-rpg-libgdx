@@ -128,8 +128,7 @@ public class Player extends Entity implements InputProcessor {
 
 	@Override
 	public boolean keyDown(int keycode) {
-		switch (keycode) {
-		case Keys.W:
+		if (keycode == Keys.W) {
 			vel.y = speed;
 			/*
 			if (canJump) {
@@ -137,16 +136,15 @@ public class Player extends Entity implements InputProcessor {
 				canJump = false;
 			}
 			*/
-			break;
-		case Keys.S:
+		}
+		else if (keycode == Keys.S) {
 			vel.y = -speed;
-			break;
-		case Keys.D:
+		}
+		if (keycode == Keys.D) {
 			vel.x = speed;
-			break;
-		case Keys.A:
+		}
+		else if (keycode == Keys.A) {
 			vel.x = -speed;
-			break;
 		}
 		return true;
 	}
