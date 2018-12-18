@@ -20,7 +20,7 @@ public class DialogueBox extends VisTable {
         IDLE,
         ANIMATING
     }
-
+    
     public DialogueBox(final String text) {
         targetText = text;
         state = State.ANIMATING;
