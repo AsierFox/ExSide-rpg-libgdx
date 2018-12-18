@@ -1,6 +1,5 @@
 package com.needsoft.exside;
 
-import com.needsoft.exside.screens.SplashScreen;
 import com.needsoft.exside.screens.LoadingScreen;
 
 public class Game extends com.badlogic.gdx.Game {

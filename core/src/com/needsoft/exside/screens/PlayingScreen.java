@@ -1,13 +1,10 @@
 package com.needsoft.exside.screens;
 
-import java.util.Iterator;
-
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.maps.MapObject;
@@ -17,75 +14,40 @@ import com.badlogic.gdx.maps.objects.PolygonMapObject;
 import com.badlogic.gdx.maps.objects.PolylineMapObject;
 import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
-import com.badlogic.gdx.maps.tiled.TiledMapTile;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
-import com.badlogic.gdx.maps.tiled.TiledMapTileLayer.Cell;
-import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
-import com.badlogic.gdx.maps.tiled.tiles.AnimatedTiledMapTile;
-import com.badlogic.gdx.maps.tiled.tiles.StaticTiledMapTile;
 import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Ellipse;
 import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Polyline;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.utils.Array;
 import com.needsoft.exside.entities.player.Player;
+import com.needsoft.exside.maps.MapManager;
 import com.needsoft.exside.systems.camera.CameraManager;
 import com.needsoft.exside.systems.hud.HUD;
+import com.needsoft.exside.systems.shaders.ShaderManager;
 
 public class PlayingScreen extends ScreenAdapter {
 	
 	private OrthographicCamera camera;
 	
-	public TiledMap map;
-	// TODO Refactor this to a map class
-	public TiledMapTileLayer collisionLayer;
-	private AnimatedTiledMapTile animatedTile;
-	
 	private OrthogonalTiledMapRenderer mapRenderer;
 	private ShapeRenderer shapeRenderer;
 	
-	private Player player;
-
-	private HUD hud;
+	private MapManager mapManager;
+	private ShaderManager shaderManager;
 	
-	private ShaderProgram shader;
+	private Player player;
+	
+	private HUD hud;
 	
 	
 	@Override
 	public void show() {
-		// TODO Refactor to map class
-		map = new TmxMapLoader().load("maps/test-map.tmx");
-		collisionLayer = (TiledMapTileLayer) map.getLayers().get(0);
+		mapManager = new MapManager("maps/test-map.tmx");
 		
-		// Set animations to map
-		Array<StaticTiledMapTile> frameTiles = new Array<StaticTiledMapTile>(2);
-		// Find animation tile in the tileset
-		final Iterator<TiledMapTile> tileIterator = map.getTileSets().getTileSet(0).iterator();
-		while (tileIterator.hasNext()) {
-			TiledMapTile tile = tileIterator.next();
-			if (tile.getProperties().containsKey("animation")
-					&& tile.getProperties().get("animation", String.class).equals("sea-water")) {
-				frameTiles.add((StaticTiledMapTile) tile);
-			}
-		}
-		animatedTile = new AnimatedTiledMapTile(1 / 3f, frameTiles);
-		// Iterate over tiled map to replace the tile animations
-		TiledMapTileLayer foregroundLayer = (TiledMapTileLayer) map.getLayers().get("foreground");
-		for (int x = 0; x < foregroundLayer.getWidth(); x++) {
-			for (int y = 0; y < foregroundLayer.getHeight(); y++) {
-				final Cell tileCell = foregroundLayer.getCell(x, y);
-				if (tileCell != null && tileCell.getTile() != null && tileCell.getTile().getProperties().containsKey("animation")) {
-					if (tileCell.getTile().getProperties().get("animation", String.class).equals("sea-water")) {
-						tileCell.setTile(animatedTile);
-					}
-				}
-			}
-		}
-		
-		mapRenderer = new OrthogonalTiledMapRenderer(map);
+		mapRenderer = new OrthogonalTiledMapRenderer(mapManager.map);
 
 		shapeRenderer = new ShapeRenderer();
 		
@@ -98,11 +60,8 @@ public class PlayingScreen extends ScreenAdapter {
 		// Don't need to specify width/height, resize() is called just after show()
 		camera = new OrthographicCamera();
 		
-		// We don't need to have all attributes due to shaders are simple
-		ShaderProgram.pedantic = false;
-		shader = new ShaderProgram(Gdx.files.internal("shaders/camera-shake.vsh"), Gdx.files.internal("shaders/camera-shake.fsh"));
-		System.out.println("Shader compiled: " + shader.isCompiled() + " Errors => [" + shader.getLog() + "]");
-		mapRenderer.getBatch().setShader(shader);
+		shaderManager = new ShaderManager();
+		mapRenderer.getBatch().setShader(shaderManager.getShader());
 	}
 	
 	@Override
@@ -112,20 +71,16 @@ public class PlayingScreen extends ScreenAdapter {
 		
 		update(delta);
 		
-//		shader.begin();
-//		shader.setUniformf("u_distort", MathUtils.random(4), MathUtils.random(4), 0);
-//		shader.end();
-		
 		// Background layer index
 		mapRenderer.render(new int[] { 0 });
 		
 		mapRenderer.getBatch().begin();
 		
-		mapRenderer.renderTileLayer((TiledMapTileLayer) map.getLayers().get("background"));
+		mapRenderer.renderTileLayer((TiledMapTileLayer) mapManager.map.getLayers().get("background"));
 
 		player.render(mapRenderer.getBatch());
 
-		mapRenderer.renderTileLayer((TiledMapTileLayer) map.getLayers().get("foreground"));
+		mapRenderer.renderTileLayer((TiledMapTileLayer) mapManager.map.getLayers().get("foreground"));
 		
 		hud.render(mapRenderer.getBatch());
 		
@@ -151,10 +106,10 @@ public class PlayingScreen extends ScreenAdapter {
 	private void updateCamera() {
 		CameraManager.lerpToTarget(camera, new Vector2(player.getX(), player.getY()));
 		
-		float mapWidth = ((TiledMapTileLayer) map.getLayers().get(0)).getTileWidth()
-				* ((TiledMapTileLayer) map.getLayers().get(0)).getWidth();
-		float mapHeight = ((TiledMapTileLayer) map.getLayers().get(0)).getTileHeight()
-				* ((TiledMapTileLayer) map.getLayers().get(0)).getHeight();
+		float mapWidth = ((TiledMapTileLayer) mapManager.map.getLayers().get(0)).getTileWidth()
+				* ((TiledMapTileLayer) mapManager.map.getLayers().get(0)).getWidth();
+		float mapHeight = ((TiledMapTileLayer) mapManager.map.getLayers().get(0)).getTileHeight()
+				* ((TiledMapTileLayer) mapManager.map.getLayers().get(0)).getHeight();
 		
 		CameraManager.clampBondaries(camera, 0, 0, mapWidth, mapHeight);
 		// Vital to call update after camera's position change
@@ -163,7 +118,7 @@ public class PlayingScreen extends ScreenAdapter {
 	}
 	
 	private void renderShapes() {
-		for (MapObject mapObject : map.getLayers().get("objects").getObjects()) {
+		for (MapObject mapObject : mapManager.map.getLayers().get("objects").getObjects()) {
 			if (mapObject instanceof RectangleMapObject) {
 				final Rectangle rect = ((RectangleMapObject) mapObject).getRectangle();
 				shapeRenderer.begin(ShapeType.Filled);
@@ -204,6 +159,14 @@ public class PlayingScreen extends ScreenAdapter {
 		}
 	}
 	
+	public TiledMap getMap() {
+		return mapManager.map;
+	}
+	
+	public TiledMapTileLayer getMapCollisionLayer() {
+		return mapManager.collisionLayer;
+	}
+	
 	@Override
 	public void resize(int width, int height) {
 		// Reduce viewport
@@ -222,7 +185,8 @@ public class PlayingScreen extends ScreenAdapter {
 		player.dispose();
 		hud.dispose();
 		mapRenderer.dispose();
-		map.dispose();
+		mapManager.dispose();
+		shaderManager.dispose();
 	}
 
 }

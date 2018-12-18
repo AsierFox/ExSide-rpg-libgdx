@@ -70,14 +70,14 @@ public abstract class Entity extends Sprite implements Renderable {
 	
 	// TODO Move to the map class
 	protected boolean isTileSolid(final float x, final float y) {
-		final Cell cell = belongsToLevel.collisionLayer.getCell((int) (x / belongsToLevel.collisionLayer.getTileWidth()),
-				(int) (y / belongsToLevel.collisionLayer.getTileHeight()));
+		final Cell cell = belongsToLevel.getMapCollisionLayer().getCell((int) (x / belongsToLevel.getMapCollisionLayer().getTileWidth()),
+				(int) (y / belongsToLevel.getMapCollisionLayer().getTileHeight()));
 		return cell != null && cell.getTile() != null && cell.getTile().getProperties().containsKey("isSolid")
 				&& cell.getTile().getProperties().get("isSolid", Boolean.class).booleanValue();
 	}
 
 	protected boolean isRightCollision() {
-		for (float i = 0; i < getHeight(); i += belongsToLevel.collisionLayer.getTileHeight() / 2) {
+		for (float i = 0; i < getHeight(); i += belongsToLevel.getMapCollisionLayer().getTileHeight() / 2) {
 			if (isTileSolid(getX() + getWidth(), getY() + i)) {
 				return true;
 			}
@@ -86,7 +86,7 @@ public abstract class Entity extends Sprite implements Renderable {
 	}
 	
 	protected boolean isLeftCollision() {
-		for (float i = 0; i < getHeight(); i += belongsToLevel.collisionLayer.getTileHeight() / 2) {
+		for (float i = 0; i < getHeight(); i += belongsToLevel.getMapCollisionLayer().getTileHeight() / 2) {
 			if (isTileSolid(getX(), getY() + i)) {
 				return true;
 			}
@@ -95,7 +95,7 @@ public abstract class Entity extends Sprite implements Renderable {
 	}
 	
 	protected boolean isTopCollision() {
-		for (float i = 0; i < getWidth(); i += belongsToLevel.collisionLayer.getTileWidth() / 2) {
+		for (float i = 0; i < getWidth(); i += belongsToLevel.getMapCollisionLayer().getTileWidth() / 2) {
 			if (isTileSolid(getX() + i, getY() + getHeight())) {
 				return true;
 			}
@@ -104,7 +104,7 @@ public abstract class Entity extends Sprite implements Renderable {
 	}
 	
 	protected boolean isBottomCollision() {
-		for (float i = 0; i < getWidth(); i += belongsToLevel.collisionLayer.getTileWidth() / 2) {
+		for (float i = 0; i < getWidth(); i += belongsToLevel.getMapCollisionLayer().getTileWidth() / 2) {
 			if (isTileSolid(getX() + i, getY())) {
 				return true;
 			}

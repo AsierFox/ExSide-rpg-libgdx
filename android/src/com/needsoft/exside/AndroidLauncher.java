@@ -1,10 +1,10 @@
 package com.needsoft.exside;
 
-import android.os.Bundle;
-
 import com.badlogic.gdx.backends.android.AndroidApplication;
 import com.badlogic.gdx.backends.android.AndroidApplicationConfiguration;
 import com.needsoft.exside.Game;
+
+import android.os.Bundle;
 
 public class AndroidLauncher extends AndroidApplication {
 	@Override

@@ -1,34 +1,24 @@
 package com.needsoft.exside.systems.hud;
 
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
-import com.badlogic.gdx.graphics.g2d.NinePatch;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.Queue;
 
 public class EventQueueBroadcaster {
 
 	private final int BOX_HEIGHT = 30;
 	
-	private Skin skin;
-	private BitmapFont font;
-	private NinePatch patch;
-	
-	private GlyphLayout layout;
+	public GlyphLayout layout;
 	
 	private Queue<Object> eventQueue;
 	
 	
-	public EventQueueBroadcaster(Skin skin, Queue<Object> queue) {
-		this.skin = skin;
+	public EventQueueBroadcaster(Queue<Object> queue) {
 		this.eventQueue = queue;
-		patch = skin.getPatch("optionbox");
-		font = skin.getFont("font");
 		layout = new GlyphLayout();
 	}
 	
-	public void render(SpriteBatch batch, Object event) {
+	public void render(Batch batch, Object event) {
 		if (null == event) {
 			return;
 		}
@@ -42,13 +32,9 @@ public class EventQueueBroadcaster {
 		}
 	}
 	
-	private void renderEvent(SpriteBatch batch, String text, float y) {
-		layout.setText(font, text);
+	private void renderEvent(Batch batch, String text, float y) {
 		float textWidth = layout.width;
 		float textHeight = layout.height;
-		
-		patch.draw(batch, 0, y, textWidth+10, BOX_HEIGHT);
-		font.draw(batch, text, (textWidth + 10) / 2 - textWidth / 2, BOX_HEIGHT / 2 + textHeight / 2 + y);
 	}
 
 }
