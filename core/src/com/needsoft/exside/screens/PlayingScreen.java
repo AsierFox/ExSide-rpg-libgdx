@@ -81,18 +81,22 @@ public class PlayingScreen extends ScreenAdapter {
 		player.render(mapRenderer.getBatch());
 
 		mapRenderer.renderTileLayer((TiledMapTileLayer) mapManager.map.getLayers().get("foreground"));
-		
-		hud.render(mapRenderer.getBatch());
-		
+
 		mapRenderer.getBatch().end();
-		
+
+
 		// Foreground layer index
 		mapRenderer.render(new int[] { 1 });
-		
+
+
+		mapRenderer.getBatch().begin();
+		hud.render(mapRenderer.getBatch());
+		mapRenderer.getBatch().end();
+
 		shapeRenderer.setProjectionMatrix(camera.combined);
 
 		renderShapes();
-		
+
 		//System.out.println("FPS : " + Gdx.app.getGraphics().getFramesPerSecond());
 	}
 	

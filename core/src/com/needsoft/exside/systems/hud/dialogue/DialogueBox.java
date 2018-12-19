@@ -1,5 +1,6 @@
-package com.needsoft.exside.systems.dialogue;
+package com.needsoft.exside.systems.hud.dialogue;
 
+import com.badlogic.gdx.utils.Align;
 import com.kotcrab.vis.ui.widget.VisLabel;
 import com.kotcrab.vis.ui.widget.VisTable;
 import com.needsoft.exside.Game;
@@ -26,16 +27,18 @@ public class DialogueBox extends VisTable {
         state = State.ANIMATING;
         animationTimer = .0f;
         animationTotalTime = text.length() * TIME_PER_CHARACTER;
-        textLabel = new VisLabel();
 
         setFillParent(false);
-
-        debug();
-
-        add(textLabel);
-        
         setWidth(Game.WINDOW_WIDTH);
         setHeight(100);
+
+        textLabel = new VisLabel();
+        textLabel.setAlignment(Align.center);
+        textLabel.setWrap(true);
+        final int lateralPadding = 150;
+        // TODO Add padding
+        add(textLabel)
+                .width(getWidth());
     }
 
     @Override

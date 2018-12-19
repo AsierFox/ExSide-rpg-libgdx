@@ -140,7 +140,7 @@ public class Player extends Entity implements InputProcessor {
 		else if (keycode == Keys.S) {
 			vel.y = -speed;
 		}
-		if (keycode == Keys.D) {
+		else if (keycode == Keys.D) {
 			vel.x = speed;
 		}
 		else if (keycode == Keys.A) {
