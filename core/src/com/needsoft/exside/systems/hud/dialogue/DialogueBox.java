@@ -54,22 +54,16 @@ public class DialogueBox extends VisTable {
             }
 
             StringBuilder displayedText = new StringBuilder();
+
             int charactersToDisplay = (int) ((animationTimer / animationTotalTime) * targetText.length());
             for (int i = 0; i < charactersToDisplay; i++) {
                 displayedText.append(targetText.charAt(i));
             }
 
             if (!displayedText.equals(textLabel.getText().toString())) {
-                setText(displayedText.toString());
+                textLabel.setText(displayedText.toString());
             }
         }
-    }
-
-    private void setText(String text) {
-        if (!text.contains("\n")) {
-            text += "\n";
-        }
-        textLabel.setText(text);
     }
 
     public boolean isFinished() {

@@ -55,7 +55,7 @@ public class PlayingScreen extends ScreenAdapter {
 		player.init(100, 200, this);
 		Gdx.input.setInputProcessor(player);
 
-		hud = new HUD();
+		hud = new HUD(this);
 		
 		// Don't need to specify width/height, resize() is called just after show()
 		camera = new OrthographicCamera();
@@ -162,7 +162,11 @@ public class PlayingScreen extends ScreenAdapter {
 			}
 		}
 	}
-	
+
+	public Player getPlayer() {
+		return player;
+	}
+
 	public TiledMap getMap() {
 		return mapManager.map;
 	}
