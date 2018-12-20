@@ -31,13 +31,13 @@ public class HUD {
     public HUD(final PlayingScreen belongsToScreen) {
         this.belongsToScreen = belongsToScreen;
 
-        stage = new Stage();
-
         VisUI.load();
+
+        stage = new Stage();
 
         //stage.setDebugAll(true);
 
-
+        // Setup bag ui
         bagWindow = new VisWindow("Bag", true);
         VisTable bagTable = new VisTable(true);
         final int bagCellSize = 30;
@@ -59,7 +59,7 @@ public class HUD {
         bagWindow.setMovable(true);
         bagWindow.add(bagTable);
 
-
+        // Setup health & mana bars
         healthBar = new VisProgressBar(0, 100, 1, false);
         healthBar.setValue(60);
         healthBar.setColor(new Color(1, 1, 0, 1));
@@ -94,7 +94,8 @@ public class HUD {
 
     	if (Gdx.input.isKeyJustPressed(Keys.Q)) {
             healthBar.setValue(healthBar.getValue() - 10);
-    	    if (null == bagWindow.getStage()) {
+
+            if (null == bagWindow.getStage()) {
                 stage.addActor(bagWindow);
 
                 Gdx.input.setInputProcessor(stage);
@@ -114,8 +115,8 @@ public class HUD {
     }
 
     public void dispose() {
-        stage.dispose();
         VisUI.dispose();
+        stage.dispose();
     }
 
 }
