@@ -19,9 +19,9 @@ public class HUD {
 
 
     public HUD() {
-        stage = new Stage();
-        
         VisUI.load();
+        
+        stage = new Stage();
 
         stage.setDebugAll(true);
 
@@ -77,8 +77,8 @@ public class HUD {
     }
 
     public void dispose() {
-        stage.dispose();
         VisUI.dispose();
+        stage.dispose();
     }
 
 }
