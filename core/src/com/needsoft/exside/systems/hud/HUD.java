@@ -3,10 +3,14 @@ package com.needsoft.exside.systems.hud;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.utils.Queue;
 import com.kotcrab.vis.ui.VisUI;
+import com.kotcrab.vis.ui.widget.VisImage;
 import com.kotcrab.vis.ui.widget.VisProgressBar;
 import com.kotcrab.vis.ui.widget.VisSplitPane;
 import com.kotcrab.vis.ui.widget.VisTable;
@@ -14,6 +18,7 @@ import com.kotcrab.vis.ui.widget.VisWindow;
 import com.needsoft.exside.Game;
 import com.needsoft.exside.screens.PlayingScreen;
 import com.needsoft.exside.systems.hud.dialogue.DialogueBox;
+import com.needsoft.exside.systems.hud.eventbroadcast.EventQueueBroadcaster;
 
 public class HUD {
 
@@ -26,6 +31,8 @@ public class HUD {
     private VisWindow bagWindow;
 
     private VisProgressBar healthBar;
+
+    private EventQueueBroadcaster eventQueueBroadcaster;
 
 
     public HUD(final PlayingScreen belongsToScreen) {
@@ -41,7 +48,11 @@ public class HUD {
         bagWindow = new VisWindow("Bag", true);
         VisTable bagTable = new VisTable(true);
         final int bagCellSize = 30;
-        bagTable.add().size(bagCellSize, bagCellSize);
+        bagTable.debugCell();
+        VisImage item = new VisImage(new TextureRegion(
+                new Texture(Gdx.files.internal("items/items.png")), 0, 0, 35, 35));
+        item.setScale(1.3f);
+        bagTable.add().size(bagCellSize, bagCellSize).setActor(item);
         bagTable.add().size(bagCellSize, bagCellSize);
         bagTable.add().size(bagCellSize, bagCellSize);
         bagTable.add().size(bagCellSize, bagCellSize);
@@ -106,6 +117,10 @@ public class HUD {
                 Gdx.input.setInputProcessor(belongsToScreen.getPlayer());
             }
     	}
+
+    	if (Gdx.input.isKeyJustPressed(Keys.SPACE)) {
+
+        }
 
         stage.act(delta);
     }
