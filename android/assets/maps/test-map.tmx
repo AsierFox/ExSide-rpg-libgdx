@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" tiledversion="1.0.3" orientation="orthogonal" renderorder="right-down" width="100" height="100" tilewidth="32" tileheight="32" nextobjectid="6">
+<map version="1.0" tiledversion="1.0.3" orientation="orthogonal" renderorder="right-down" width="100" height="100" tilewidth="32" tileheight="32" nextobjectid="13">
  <tileset firstgid="1" name="tileset-start" tilewidth="32" tileheight="32" tilecount="638" columns="29">
   <image source="../tilesets/tileset-start.png" width="944" height="720"/>
   <tile id="0">
@@ -396,7 +396,7 @@
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 </data>
  </layer>
- <objectgroup name="objects">
+ <objectgroup name="objects" opacity="0.95">
   <object id="1" x="612.074" y="2896.87" width="100.615" height="47.5126"/>
   <object id="2" x="749.021" y="2895.47" width="83.8457" height="53.1023">
    <ellipse/>
@@ -406,6 +406,14 @@
   </object>
   <object id="4" x="536.613" y="2899.66">
    <polygon points="0,0 51.7049,53.1023 40.5254,-37.7306"/>
+  </object>
+ </objectgroup>
+ <objectgroup name="items">
+  <object id="12" x="488" y="2567" width="21" height="22">
+   <properties>
+    <property name="healthPotion" value=""/>
+   </properties>
+   <ellipse/>
   </object>
  </objectgroup>
 </map>

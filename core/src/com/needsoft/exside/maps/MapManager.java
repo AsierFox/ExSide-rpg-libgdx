@@ -1,7 +1,17 @@
 package com.needsoft.exside.maps;
 
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.maps.MapObject;
+import com.badlogic.gdx.maps.MapObjects;
+import com.badlogic.gdx.maps.objects.CircleMapObject;
+import com.badlogic.gdx.maps.objects.EllipseMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTile;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
@@ -52,8 +62,38 @@ public class MapManager {
 			}
 		}
 	}
+
+	// TODO Return an Item
+	public List<Sprite> loadItems() {
+		List<Sprite> items = new ArrayList<Sprite>();
+
+		MapObjects mapObjects = map.getLayers().get("items").getObjects();
+		if (mapObjects.getCount() <= 0) {
+			return items;
+		}
+
+		for (MapObject mapObject : mapObjects) {
+			Sprite item = null;
+
+			EllipseMapObject circleMapObject = (EllipseMapObject) mapObject;
+			float spawnX = circleMapObject.getEllipse().x;
+			float spawnY = circleMapObject.getEllipse().y;
+
+			if (mapObject.getProperties().containsKey("healthPotion")) {
+				item = new Sprite(new TextureRegion(
+						new Texture(Gdx.files.internal("items/items.png")), 30, 50));
+			}
+
+			item.setX(spawnX);
+			item.setY(spawnY);
+			items.add(item);
+		}
+
+		return items;
+	}
 	
 	public void dispose() {
 		map.dispose();
 	}
+
 }

@@ -5,6 +5,7 @@ import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.maps.MapObject;
@@ -28,6 +29,8 @@ import com.needsoft.exside.systems.camera.CameraManager;
 import com.needsoft.exside.systems.hud.HUD;
 import com.needsoft.exside.systems.shaders.ShaderManager;
 
+import java.util.List;
+
 public class PlayingScreen extends ScreenAdapter {
 	
 	private OrthographicCamera camera;
@@ -39,6 +42,8 @@ public class PlayingScreen extends ScreenAdapter {
 	private ShaderManager shaderManager;
 	
 	private Player player;
+
+	private List<Sprite> items;
 	
 	private HUD hud;
 	
@@ -62,6 +67,8 @@ public class PlayingScreen extends ScreenAdapter {
 		
 		shaderManager = new ShaderManager();
 		mapRenderer.getBatch().setShader(shaderManager.getShader());
+
+		items = mapManager.loadItems();
 	}
 	
 	@Override
@@ -79,6 +86,10 @@ public class PlayingScreen extends ScreenAdapter {
 		mapRenderer.renderTileLayer((TiledMapTileLayer) mapManager.map.getLayers().get("background"));
 
 		player.render(mapRenderer.getBatch());
+
+		for (Sprite item : items) {
+			mapRenderer.getBatch().draw(item, item.getX(), item.getY());
+		}
 
 		mapRenderer.renderTileLayer((TiledMapTileLayer) mapManager.map.getLayers().get("foreground"));
 
