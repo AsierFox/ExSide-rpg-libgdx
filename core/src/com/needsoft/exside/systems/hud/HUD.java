@@ -50,8 +50,7 @@ public class HUD {
         final int bagCellSize = 30;
         bagTable.debugCell();
         VisImage item = new VisImage(new TextureRegion(
-                new Texture(Gdx.files.internal("items/items.png")), 0, 0, 35, 35));
-        item.setScale(1.3f);
+                new Texture(Gdx.files.internal("items/items.png")), 16, 16));
         bagTable.add().size(bagCellSize, bagCellSize).setActor(item);
         bagTable.add().size(bagCellSize, bagCellSize);
         bagTable.add().size(bagCellSize, bagCellSize);
@@ -119,7 +118,7 @@ public class HUD {
     	}
 
     	if (Gdx.input.isKeyJustPressed(Keys.SPACE)) {
-
+    		//
         }
 
         stage.act(delta);

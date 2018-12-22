@@ -39,6 +39,7 @@ public abstract class Entity extends Sprite implements Renderable {
 	
 	public Entity(final TextureRegion textureRegion) {
 		super(textureRegion);
+		collider = new Rectangle(getX(), getY(), getWidth(), getHeight());
 	}
 	
 	// TODO Move from Screen to levels in a future
@@ -47,7 +48,6 @@ public abstract class Entity extends Sprite implements Renderable {
 		belongsToLevel = level;
 		
 		vel = new Vector2();
-		collider = new Rectangle(getX(), getY(), getWidth(), getHeight());
 
 		setX(x);
 		setY(y);
@@ -67,7 +67,12 @@ public abstract class Entity extends Sprite implements Renderable {
 		
 		canJump = false;
 	}
-	
+
+	protected void updateCollider() {
+		collider.x = getX();
+		collider.y = getY();
+	}
+
 	// TODO Move to the map class
 	protected boolean isTileSolid(final float x, final float y) {
 		final Cell cell = belongsToLevel.getMapCollisionLayer().getCell((int) (x / belongsToLevel.getMapCollisionLayer().getTileWidth()),
@@ -77,8 +82,8 @@ public abstract class Entity extends Sprite implements Renderable {
 	}
 
 	protected boolean isRightCollision() {
-		for (float i = 0; i < getHeight(); i += belongsToLevel.getMapCollisionLayer().getTileHeight() / 2) {
-			if (isTileSolid(getX() + getWidth(), getY() + i)) {
+		for (float i = 0; i < collider.getHeight(); i += belongsToLevel.getMapCollisionLayer().getTileHeight() / 2) {
+			if (isTileSolid(collider.getX() + collider.getWidth(), collider.getY() + i)) {
 				return true;
 			}
 		}
@@ -86,8 +91,8 @@ public abstract class Entity extends Sprite implements Renderable {
 	}
 	
 	protected boolean isLeftCollision() {
-		for (float i = 0; i < getHeight(); i += belongsToLevel.getMapCollisionLayer().getTileHeight() / 2) {
-			if (isTileSolid(getX(), getY() + i)) {
+		for (float i = 0; i < collider.getHeight(); i += belongsToLevel.getMapCollisionLayer().getTileHeight() / 2) {
+			if (isTileSolid(collider.getX(), collider.getY() + i)) {
 				return true;
 			}
 		}
@@ -95,8 +100,8 @@ public abstract class Entity extends Sprite implements Renderable {
 	}
 	
 	protected boolean isTopCollision() {
-		for (float i = 0; i < getWidth(); i += belongsToLevel.getMapCollisionLayer().getTileWidth() / 2) {
-			if (isTileSolid(getX() + i, getY() + getHeight())) {
+		for (float i = 0; i < collider.getWidth(); i += belongsToLevel.getMapCollisionLayer().getTileWidth() / 2) {
+			if (isTileSolid(collider.getX() + i, collider.getY() + collider.getHeight())) {
 				return true;
 			}
 		}
@@ -104,8 +109,8 @@ public abstract class Entity extends Sprite implements Renderable {
 	}
 	
 	protected boolean isBottomCollision() {
-		for (float i = 0; i < getWidth(); i += belongsToLevel.getMapCollisionLayer().getTileWidth() / 2) {
-			if (isTileSolid(getX() + i, getY())) {
+		for (float i = 0; i < collider.getWidth(); i += belongsToLevel.getMapCollisionLayer().getTileWidth() / 2) {
+			if (isTileSolid(collider.getX() + i, collider.getY())) {
 				return true;
 			}
 		}

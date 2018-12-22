@@ -10,7 +10,6 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.MapObjects;
-import com.badlogic.gdx.maps.objects.CircleMapObject;
 import com.badlogic.gdx.maps.objects.EllipseMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTile;
@@ -81,7 +80,7 @@ public class MapManager {
 
 			if (mapObject.getProperties().containsKey("healthPotion")) {
 				item = new Sprite(new TextureRegion(
-						new Texture(Gdx.files.internal("items/items.png")), 30, 50));
+						new Texture(Gdx.files.internal("items/items.png")),  16, 16));
 			}
 
 			item.setX(spawnX);

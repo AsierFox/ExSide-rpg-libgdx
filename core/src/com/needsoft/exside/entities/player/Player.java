@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.needsoft.exside.entities.Entity;
+import com.needsoft.exside.screens.PlayingScreen;
 import com.needsoft.exside.types.Direction;
 import com.needsoft.exside.types.EntityState;
 
@@ -20,9 +21,17 @@ public class Player extends Entity implements InputProcessor {
 		
 		animationSet = new PlayerAnimationSet(this);
 	}
-	
+
+	@Override
+	public void init(float x, float y, PlayingScreen level) {
+		super.init(x, y, level);
+
+		collider.height -= 25;
+	}
+
 	@Override
 	public void update(float delta) {
+
 		//applyGravity(delta);
 		
 		// TODO Refactor things to Entity
@@ -64,6 +73,8 @@ public class Player extends Entity implements InputProcessor {
 			setY(oldY);
 			vel.y = 0;
 		}
+
+		updateCollider();
 		
 		// Update state
 		if (vel.x == 0 && vel.y == 0) {

@@ -85,11 +85,11 @@ public class PlayingScreen extends ScreenAdapter {
 		
 		mapRenderer.renderTileLayer((TiledMapTileLayer) mapManager.map.getLayers().get("background"));
 
-		player.render(mapRenderer.getBatch());
-
 		for (Sprite item : items) {
 			mapRenderer.getBatch().draw(item, item.getX(), item.getY());
 		}
+
+		player.render(mapRenderer.getBatch());
 
 		mapRenderer.renderTileLayer((TiledMapTileLayer) mapManager.map.getLayers().get("foreground"));
 
