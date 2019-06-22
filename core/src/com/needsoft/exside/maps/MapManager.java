@@ -4,21 +4,19 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.MapObjects;
 import com.badlogic.gdx.maps.objects.EllipseMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTile;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
-import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer.Cell;
+import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.tiles.AnimatedTiledMapTile;
 import com.badlogic.gdx.maps.tiled.tiles.StaticTiledMapTile;
 import com.badlogic.gdx.utils.Array;
+import com.needsoft.exside.items.HealthPotion;
+import com.needsoft.exside.items.Item;
 
 public class MapManager {
 
@@ -53,7 +51,7 @@ public class MapManager {
 		for (int x = 0; x < foregroundLayer.getWidth(); x++) {
 			for (int y = 0; y < foregroundLayer.getHeight(); y++) {
 				final Cell tileCell = foregroundLayer.getCell(x, y);
-				if (tileCell != null && tileCell.getTile() != null && tileCell.getTile().getProperties().containsKey("animation")) {
+				if (null != tileCell && null != tileCell.getTile() && tileCell.getTile().getProperties().containsKey("animation")) {
 					if (tileCell.getTile().getProperties().get("animation", String.class).equals("sea-water")) {
 						tileCell.setTile(animatedTile);
 					}
@@ -61,33 +59,31 @@ public class MapManager {
 			}
 		}
 	}
-
-	// TODO Return an Item
-	public List<Sprite> loadItems() {
-		List<Sprite> items = new ArrayList<Sprite>();
-
+	
+	public List<Item> loadItems() {
+		List<Item> items = new ArrayList<>();
+		
 		MapObjects mapObjects = map.getLayers().get("items").getObjects();
 		if (mapObjects.getCount() <= 0) {
 			return items;
 		}
 
 		for (MapObject mapObject : mapObjects) {
-			Sprite item = null;
+			Item item = null;
 
 			EllipseMapObject circleMapObject = (EllipseMapObject) mapObject;
 			float spawnX = circleMapObject.getEllipse().x;
 			float spawnY = circleMapObject.getEllipse().y;
 
 			if (mapObject.getProperties().containsKey("healthPotion")) {
-				item = new Sprite(new TextureRegion(
-						new Texture(Gdx.files.internal("items/items.png")),  16, 16));
+				item = new HealthPotion();
 			}
 
 			item.setX(spawnX);
 			item.setY(spawnY);
 			items.add(item);
 		}
-
+		
 		return items;
 	}
 	

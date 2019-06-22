@@ -113,7 +113,7 @@ public class Player extends Entity implements InputProcessor {
 		// Update previous state
 		previousState = currentState;
 		
-		//System.out.println("Collides X: " + isXCollision + " // Collides Y: " + isYCollision);
+		//System.out.println("[Player] Collides X: " + isXCollision + " // Collides Y: " + isYCollision);
 	}
 
 	private void applyGravity(float delta) {

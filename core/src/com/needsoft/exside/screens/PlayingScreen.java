@@ -1,11 +1,12 @@
 package com.needsoft.exside.screens;
 
+import java.util.List;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.maps.MapObject;
@@ -24,12 +25,11 @@ import com.badlogic.gdx.math.Polyline;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.needsoft.exside.entities.player.Player;
+import com.needsoft.exside.items.Item;
 import com.needsoft.exside.maps.MapManager;
 import com.needsoft.exside.systems.camera.CameraManager;
 import com.needsoft.exside.systems.hud.HUD;
 import com.needsoft.exside.systems.shaders.ShaderManager;
-
-import java.util.List;
 
 public class PlayingScreen extends ScreenAdapter {
 	
@@ -43,7 +43,7 @@ public class PlayingScreen extends ScreenAdapter {
 	
 	private Player player;
 
-	private List<Sprite> items;
+	private List<Item> items;
 	
 	private HUD hud;
 	
@@ -59,7 +59,12 @@ public class PlayingScreen extends ScreenAdapter {
 		player = new Player();
 		player.init(100, 200, this);
 		Gdx.input.setInputProcessor(player);
-
+		
+		items = mapManager.loadItems();
+		for (Item item : items) {
+			item.init(item.getX(), item.getY(), this);
+		}
+		
 		hud = new HUD(this);
 		
 		// Don't need to specify width/height, resize() is called just after show()
@@ -67,8 +72,6 @@ public class PlayingScreen extends ScreenAdapter {
 		
 		shaderManager = new ShaderManager();
 		mapRenderer.getBatch().setShader(shaderManager.getShader());
-
-		items = mapManager.loadItems();
 	}
 	
 	@Override
@@ -84,17 +87,16 @@ public class PlayingScreen extends ScreenAdapter {
 		mapRenderer.getBatch().begin();
 		
 		mapRenderer.renderTileLayer((TiledMapTileLayer) mapManager.map.getLayers().get("background"));
-
-		for (Sprite item : items) {
-			mapRenderer.getBatch().draw(item, item.getX(), item.getY());
+		
+		for (Item item : items) {
+			item.render(mapRenderer.getBatch());
 		}
-
+		
 		player.render(mapRenderer.getBatch());
 
 		mapRenderer.renderTileLayer((TiledMapTileLayer) mapManager.map.getLayers().get("foreground"));
 
 		mapRenderer.getBatch().end();
-
 
 		// Foreground layer index
 		mapRenderer.render(new int[] { 1 });
@@ -108,7 +110,7 @@ public class PlayingScreen extends ScreenAdapter {
 
 		renderShapes();
 
-		//System.out.println("FPS : " + Gdx.app.getGraphics().getFramesPerSecond());
+		//System.out.println("[PlaringScreens] FPS : " + Gdx.app.getGraphics().getFramesPerSecond());
 	}
 	
 	private void update(final float delta) {
@@ -206,6 +208,9 @@ public class PlayingScreen extends ScreenAdapter {
 		mapRenderer.dispose();
 		mapManager.dispose();
 		shaderManager.dispose();
+		for (Item item : items) {
+			item.dispose();
+		}
 	}
 
 }

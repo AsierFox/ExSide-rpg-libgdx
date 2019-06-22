@@ -42,7 +42,6 @@ public abstract class Entity extends Sprite implements Renderable {
 		collider = new Rectangle(getX(), getY(), getWidth(), getHeight());
 	}
 	
-	// TODO Move from Screen to levels in a future
 	@Override
 	public void init(final float x, final float y, final PlayingScreen level) {
 		belongsToLevel = level;
